@@ -7,7 +7,8 @@ $pdo = new PDO(
   $dbPassword
 );
 
-$id = $_GET['id'];
+$id = filter_input(INPUT_GET, 'id');
+
 $sql = "SELECT * FROM categories WHERE id = :id";
 $statement = $pdo->prepare($sql);
 $statement->bindValue(':id', $id, PDO::PARAM_INT);
@@ -18,7 +19,7 @@ $category = $statement->fetchAll(PDO::FETCH_ASSOC);
 <!DOCTYPE html>
 <html lang="ja">
 <body>
-	<form action="edit_save.php" method="post">
+	<form action="update.php" method="post">
   <input type="hidden" name="category_id" value="<?php echo $id; ?>" >
 		<table align="center">
       <tr>
@@ -31,4 +32,4 @@ $category = $statement->fetchAll(PDO::FETCH_ASSOC);
 		</table>
 	</form>
 </body>
-</html> 
+</html>

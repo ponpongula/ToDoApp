@@ -1,6 +1,6 @@
 <?php
 session_start();
-$name = $_POST['name'];
+$name = filter_input(INPUT_POST, 'name');
 $user_id = $_SESSION['id'];
 if (empty($user_id)) {
   header("Location: public/signin.php");

@@ -7,8 +7,9 @@ $pdo = new PDO(
   $dbPassword
 );
 
-$id = $_POST["category_id"];
-$name = $_POST["name"];
+$id = filter_input(INPUT_POST, 'category_id');
+$name = filter_input(INPUT_POST, 'name');
+
 $stmt = $pdo->prepare("UPDATE categories SET name = :name WHERE id = :id");
 $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 $stmt->bindParam(':name', $name, PDO::PARAM_STR);

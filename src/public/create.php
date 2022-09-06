@@ -7,39 +7,8 @@ $sql = "SELECT * FROM categories";
 $statement = $pdo->prepare($sql);
 $statement->execute();
 $categories = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-foreach ($categories as $data) {
-  $catedory_data .= "<option value='". $data['id'];
-  $catedory_data .= "'>". $data['name']. "</option>";
-}
-// var_dump($categories);
-$user_id = $_SESSION['id'];
-$contents = $_POST['contents'];
-$category_id = $_POST['id'];
-$deadline = $_POST['deadline'];
-// var_dump($category_id);
-// die();
-if (isset($user_id) and isset($deadline)) {
-  $dbUserName = 'root';
-  $dbPassword = 'password';
-  $pdo = new PDO(
-      'mysql:host=mysql; dbname=todo; charset=utf8',
-      $dbUserName,
-      $dbPassword
-  );
-
-  $sql = "INSERT INTO blogs(user_id, contents, category_id, deadline) VALUES (:user_id, :contents, :category_id, :deadline)";
-
-  $statement = $pdo->prepare($sql);
-  $statement->bindValue(':user_id', $user_id, PDO::PARAM_STR);
-  $statement->bindValue(':contents', $contents, PDO::PARAM_STR);
-  $statement->bindValue(':category_id', $category_id, PDO::PARAM_STR);
-  $statement->bindValue(':deadline', $deadline, PDO::PARAM_STR);
-  $statement->execute();
-  header("Location: ./index.php");
-  exit();
-}
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -51,7 +20,7 @@ if (isset($user_id) and isset($deadline)) {
   }
 </style>
 <body>
-  <form action="create.php" method="post">
+  <form action="store.php" method="post">
     <table align="center">
       <tr>
         <td><p><a href="category/index.php">カテゴリを追加</p></td>
@@ -60,17 +29,17 @@ if (isset($user_id) and isset($deadline)) {
       <tr>
         <td>
           <select name='category'>
-            <?php 
-              echo $catedory_data; 
-            ?>
+            <?php foreach ($categories as $data): ?>
+              <option type="data" value=<?php echo $data['id'];?>><?php echo $data['name'];?></option>
+            <?php endforeach; ?>
           </select>
         </td>
       </tr>
 
       <tr>
-        <td><p><input type="text" name="contents" placeholder="タスクを追加"></p></td>
-        <td><p><input type="date" name="deadline" placeholder=""></td>
-        <td><p><a href="create.php">追加</p></td>
+        <td><input type="text" name="contents" placeholder="タスクを追加"></td>
+        <td><input type="date" name="deadline" placeholder=""></td>
+        <td><button>追加</button></td>
       </tr>
 
       <tr>

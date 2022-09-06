@@ -1,4 +1,4 @@
-<?php 
+<?php
 $dbUserName = "root";
 $dbPassword = "password";
 $options = [];
@@ -8,10 +8,10 @@ $pdo = new PDO(
   $dbPassword,
   $options
 );
-$id = filter_input(INPUT_POST, 'id');
+$id = filter_input(INPUT_GET, 'id');
 
 if (empty($id)) {
-  header("Location: main.php");
+  header("Location: index.php");
   exit;
 }
 

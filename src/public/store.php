@@ -1,28 +1,26 @@
 <?php
 session_start();
 $user_id = $_SESSION['id'];
-$title = $_POST["title"];
-$content = $_POST["content"];
-if (empty($user_id)) {
-  header("Location: ./signin.php");
-  exit();
-}
-
-if (isset($title) and isset($content)) {
+$status = 0;
+$contents = filter_input(INPUT_POST, 'contents');
+$category_id = filter_input(INPUT_POST, 'category');
+$deadline = filter_input(INPUT_POST, 'deadline');
+if (isset($contents) and isset($deadline)) {
   $dbUserName = 'root';
   $dbPassword = 'password';
   $pdo = new PDO(
-      'mysql:host=mysql; dbname=blog; charset=utf8',
+      'mysql:host=mysql; dbname=todo; charset=utf8',
       $dbUserName,
       $dbPassword
   );
 
-  $sql = "INSERT INTO blogs(user_id, title, content) VALUES (:user_id, :title, :content)";
-
+  $sql = "INSERT INTO tasks(user_id, status, contents, category_id, deadline) VALUES (:user_id, :status, :contents, :category_id, :deadline)";
   $statement = $pdo->prepare($sql);
   $statement->bindValue(':user_id', $user_id, PDO::PARAM_STR);
-  $statement->bindValue(':title', $title, PDO::PARAM_STR);
-  $statement->bindValue(':content', $content, PDO::PARAM_STR);
+  $statement->bindValue(':status', $status, PDO::PARAM_STR);
+  $statement->bindValue(':contents', $contents, PDO::PARAM_STR);
+  $statement->bindValue(':category_id', $category_id, PDO::PARAM_STR);
+  $statement->bindValue(':deadline', $deadline, PDO::PARAM_STR);
   $statement->execute();
   header("Location: ./index.php");
   exit();
