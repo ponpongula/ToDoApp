@@ -10,11 +10,6 @@ $pdo = new PDO(
 );
 $id = filter_input(INPUT_POST, 'id');
 
-if (empty($id)) {
-  header("Location: main.php");
-  exit;
-}
-
 try{
 	$sql = "DELETE FROM tasks WHERE id = :id";
 	$stmt = $pdo->prepare($sql);
