@@ -3,8 +3,13 @@ session_start();
 $search_word = filter_input(INPUT_GET, 'search');
 $search_category = filter_input(INPUT_GET, 'category');
 $search_completion = filter_input(INPUT_GET, 'completion');
-var_dump($search_word);var_dump($search_category);var_dump($search_completion);
 $user_id = $_SESSION['id'];
+if (isset($_SESSION['id'])) {
+  $user_id = $_SESSION['id'];
+} else {
+  header("Location: signin.php");
+  exit();
+}
 $dbUserName = "root";
 $dbPassword = "password";
 $pdo = new PDO(
@@ -12,14 +17,17 @@ $pdo = new PDO(
   $dbUserName, 
   $dbPassword
 );
-
-require_once("./header.php");
-
-// if (isset($_GET['order'])) {
-//   $direction = $_GET['order'];
-// } else {
-//   $direction = 'desc';
-// } 
+require_once("header.php");
+if (isset($search_category)) {
+  $category_id = "AND tasks.category_id = $search_category";
+} else {
+  $category_id = '';
+}
+if (isset($search_completion)) {
+  $sutatus_id = "AND tasks.status = $search_completion";
+} else {
+  $sutatus_id = '';
+}
 if (isset($search_word) OR isset($search_category) OR isset($search_completion)) {
   $sql = "SELECT 
   tasks.contents
@@ -33,7 +41,8 @@ if (isset($search_word) OR isset($search_category) OR isset($search_completion))
   JOIN categories 
     ON tasks.category_id = categories.id 
     WHERE contents LIKE :search_word 
-    OR category_id = :search_category
+    $category_id
+    $sutatus_id
     ORDER BY tasks_id";
 } else {
   $sql = "SELECT 
@@ -48,7 +57,6 @@ if (isset($search_word) OR isset($search_category) OR isset($search_completion))
   JOIN categories 
     ON tasks.category_id = categories.id";
 }
-var_dump($sql);
 if ($_GET['order'] === 'desc') {
   $sql = $sql . ' DESC';
 } elseif ($_GET['order'] === 'asc') {
@@ -56,7 +64,6 @@ if ($_GET['order'] === 'desc') {
 }
 $statement = $pdo->prepare($sql);
 $statement->bindValue(":search_word", '%' . $search_word . '%', PDO::PARAM_STR);
-$statement->bindValue(':search_category', '%' . $search_category . '%', PDO::PARAM_INT);
 $statement->execute();
 $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -64,7 +71,6 @@ $sql = "SELECT * FROM categories";
 $statement = $pdo->prepare($sql);
 $statement->execute();
 $categories = $statement->fetchAll(PDO::FETCH_ASSOC);
-print_r($tasks);
 ?>
 
 <!DOCTYPE html>
@@ -96,6 +102,7 @@ print_r($tasks);
         </label>
 
         <select name='category'>
+          <option>選択してください</option>
           <?php foreach ($categories as $data): ?>
             <option type="data" value=<?php echo $data['id'];?>><?php echo $data['name'];?></option>
           <?php endforeach; ?>

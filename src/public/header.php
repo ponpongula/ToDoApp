@@ -24,7 +24,7 @@
     <nav class="nav">
       <ul class="menu-group">
         <li class="menu-item"><a href="index.php">ホーム</a></li>
-        <li class="menu-item"><a href="mypage.php">カテゴリ一覧</a></li>
+        <li class="menu-item"><a href="category/index.php">カテゴリ一覧</a></li>
         <li class="menu-item"><a href="logout.php">ログアウト</a></li>
       </ul>
     </nav>

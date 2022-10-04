@@ -48,7 +48,8 @@ $categorys = $statement->fetchAll(PDO::FETCH_ASSOC);
       <?php endforeach; ?>
 
       <tr>
-        <td><a href = "/create.php">戻る</td> 
+        <td><a href = "/create.php">カテゴリ一覧へ戻る</td> 
+        <td><a href = "/index.php">一覧へ戻る</td> 
       </tr>
     </table>
   </from>
